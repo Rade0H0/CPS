@@ -1,0 +1,47 @@
+{
+  "code":0,
+  "msg":"",
+  "count":41,
+  "data":[
+    {
+      "MaterialName":"钢铁",
+      "Unit":"T",
+      "Value":"100"
+    },
+    {
+      "MaterialName":"木材",
+      "Unit":"T",
+      "Value":"1000"
+    }, {
+      "MaterialName":"混凝土",
+      "Unit":"T",
+      "Value":"230"
+    },{
+      "MaterialName":"钢铁",
+      "Unit":"T",
+      "Value":"100"
+    },
+    {
+      "MaterialName":"木材",
+      "Unit":"T",
+      "Value":"1000"
+    }, {
+      "MaterialName":"混凝土",
+      "Unit":"T",
+      "Value":"230"
+    },{
+      "MaterialName":"钢铁",
+      "Unit":"T",
+      "Value":"100"
+    },
+    {
+      "MaterialName":"木材",
+      "Unit":"T",
+      "Value":"1000"
+    }, {
+      "MaterialName":"混凝土",
+      "Unit":"T",
+      "Value":"230"
+    }
+  ]
+}

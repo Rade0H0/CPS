@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>碳排汇总信息</title>
+  <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+
+  <script src="../jquery-3.4.1.min.js"></script>
+  <script src="../layui/layui.js" charset="utf-8"></script>
+  <script src="../echarts/dist/echarts.js" charset="utf-8"></script>
+
+  <script src="js/echarts-all.js"></script>
+  <script src="js/reconnecting-websocket.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+
+</head>
+
+
+<body class="layui-layout-body">
+
+
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">CPS系统 > 数据分析 > 碳排汇总信息</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+  </div>
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  layui-nav-side lay-filter="test">
+        <li class="layui-nav-item">
+          <a class="" href="javascript:;">系统管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="Component_management.html">构件管理</a></dd>
+            <dd><a href="Equipment_ management.html">设备管理</a></dd>
+            <dd><a href="Carbonemissionfactor_management.html">碳排因子管理</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">实时监控</a>
+          <dl class="layui-nav-child">
+            <dd><a href="Component_production.html">构件生产</a></dd>
+            <dd><a href="Component__transportation.html">构件运输</a></dd>
+            <dd><a href="Component_assembly.html">现场装配</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item  layui-nav-itemed">
+          <a href="javascript:;">数据分析</a>
+          <dl class="layui-nav-child">
+            <dd><a href="DataAnalysis_source.html">按碳源类型分</a></dd>
+            <dd><a href="DataAnalysis_stage.html">按建造阶段分</a></dd>
+            <dd><a href="DataAnalysis_summary.html">碳排汇总信息</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">退出</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="layui-body">
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+          <div id="dropdown" class="dropdown">
+            <button id="ontime_show" class="btn btn-success" onclick="ontimeshow()">实时显示</button>
+            <button class="btn btn-info" onclick="refer_data()">历史查询</button>
+            <button class="btn btn-info" id="dropdownMenu1" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li>
+                <a tabindex="-1" onclick="refer_day()">按日查询</a>
+              </li>
+              <li>
+                <a tabindex="-1" onclick="refer_week()">按周查询</a>
+              </li>
+              <li>
+                <a tabindex="-1" onclick="refer_month()">按月查询</a>
+              </li>
+              <!--<li>
+                          <a tabindex="-1" onclick="refer_all()">查询所有</a>
+                      </li>-->
+            </ul>
+            <input id="time_day" type="date" value="2018-04-20" style="display:none">
+            <input id="time_week" type="week" value="2018-W15" style="display:none">
+            <input id="time_month" type="month" value="2018-04" style="display:none">
+          </div>
+        </div>
+        <div class="span6">
+        </div>
+        <div class="span4">
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="main" style="width: 100%; height: 400px; -webkit-tap-highlight-color: transparent; user-select: none; cursor: default; background-color: rgba(0, 0, 0, 0);" _echarts_instance_="1582875483274"><div style="position: relative; overflow: hidden; width: 1135px; height: 400px;"><div data-zr-dom-id="bg" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 1135px; height: 400px; user-select: none;"></div><canvas width="2270" height="800" data-zr-dom-id="0" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 1135px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="2270" height="800" data-zr-dom-id="1" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 1135px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="2270" height="800" data-zr-dom-id="_zrender_hover_" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 1135px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><div class="echarts-dataview" style="position: absolute; display: block; overflow: hidden; transition: height 0.8s ease 0s, background-color 1s ease 0s; z-index: 1; left: 0px; top: 0px; width: 1135px; height: 0px; background-color: rgb(240, 255, 255);"></div><div class="echarts-tooltip" style="position: absolute; display: none; border-style: solid; white-space: nowrap; transition: left 0.4s ease 0s, top 0.4s ease 0s; background-color: rgba(50, 50, 50, 0.5); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font-family: 微软雅黑, Arial, Verdana, sans-serif; padding: 5px; left: 215px; top: 26px;"><strong>2020-02-28各部分碳排量</strong><br>内含碳排 : 0<br>磨光机 : 0<br>养护窑 : 0<br>堆垛机 : 0<br>振捣台 : 0<br>铺料机 : 0<br>脱模剂喷涂机 : 0<br>模具清扫机 : 0<br>总碳排：0<br><a style="color:red" href="PieChart.html?time=2020-02-28&amp;data1=0&amp;data2=0&amp;data3=0&amp;data4=0&amp;data5=0&amp;data6=0&amp;data7=0&amp;data_nh=0&amp;data_yz=20">饼状图</a></div></div></div>
+        </div>
+      </div>
+      <br>
+      <div class="row-fluid">
+        <div class="span6">
+          <div id="chart1" style="float: left; width: 55%; height: 400px; -webkit-tap-highlight-color: transparent; user-select: none; background-color: rgba(0, 0, 0, 0); cursor: default;" _echarts_instance_="1582875483275"><div style="position: relative; overflow: hidden; width: 625px; height: 400px;"><div data-zr-dom-id="bg" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 625px; height: 400px; user-select: none;"></div><canvas width="1250" height="800" data-zr-dom-id="0" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 625px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="1250" height="800" data-zr-dom-id="1" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 625px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="1250" height="800" data-zr-dom-id="_zrender_hover_" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 625px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><div class="echarts-dataview" style="position: absolute; display: block; overflow: hidden; transition: height 0.8s ease 0s, background-color 1s ease 0s; z-index: 1; left: 0px; top: 0px; width: 625px; height: 0px; background-color: rgb(240, 255, 255);"></div></div></div>
+        </div>
+        <div class="span6">
+          <div id="chart2" style="float: right; width: 45%; height: 400px; -webkit-tap-highlight-color: transparent; user-select: none; background-color: rgba(0, 0, 0, 0); cursor: default;" _echarts_instance_="1582875483276"><div style="position: relative; overflow: hidden; width: 511px; height: 400px;"><div data-zr-dom-id="bg" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 511px; height: 400px; user-select: none;"></div><canvas width="1022" height="800" data-zr-dom-id="0" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 511px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="1022" height="800" data-zr-dom-id="1" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 511px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><canvas width="1022" height="800" data-zr-dom-id="_zrender_hover_" class="zr-element" style="position: absolute; left: 0px; top: 0px; width: 511px; height: 400px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></canvas><div class="echarts-dataview" style="position: absolute; display: block; overflow: hidden; transition: height 0.8s ease 0s, background-color 1s ease 0s; z-index: 1; left: 0px; top: 0px; width: 511px; height: 0px; background-color: rgb(240, 255, 255);"></div><div class="echarts-tooltip zr-element" style="position: absolute; display: none; border-style: solid; white-space: nowrap; transition: left 0.4s ease 0s, top 0.4s ease 0s; background-color: rgba(50, 50, 50, 0.5); border-width: 0px; border-color: rgb(51, 51, 51); border-radius: 4px; color: rgb(255, 255, 255); font-family: 微软雅黑, Arial, Verdana, sans-serif; padding: 5px; left: 61px; top: 128px;">2020-02-28内含碳排<br>内含碳排总量 : 0<br>各时间段内含碳排量 : 0</div></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <!-- ECharts单文件引入 -->
+    <script>
+      function getNowFormatDate()
+      {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if(month >= 1 && month <= 9) {
+          month = "0" + month;
+        }
+        if(strDate >= 0 && strDate <= 9) {
+          strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
+          " " + date.getHours() + seperator2 + date.getMinutes() +
+          seperator2 + date.getSeconds();
+        var riqi = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+        return riqi;
+      }
+      var time = new Array();
+      var data1 = new Array();
+      var data2 = new Array();
+      var data3 = new Array();
+      var data4 = new Array();
+      var data5 = new Array();
+      var data6 = new Array();
+      var data7 = new Array();
+      var data8 = new Array();
+      var data1_all = new Array();
+      var data2_all = new Array();
+      var data3_all = new Array();
+      var data4_all = new Array();
+      var data5_all = new Array();
+      var data6_all = new Array();
+      var data7_all = new Array();
+      var data8_all = new Array();
+      var data_all = new Array();
+      var data_all_all = new Array();
+      var data_mark =20;
+      var titletime = getNowFormatDate();
+      var refer_flag = 0;
+      var index = 0;
+      var first_flag = 1;
+      var ontimes_flag = 1;
+      var show_flag=0;
+      var send_data = {
+        "time": "22:00",
+        "data": [200, 300, 400]
+      };
+      var send_data_first = {
+        "time": ["8:00", "10:00", "12:00"],
+        "data": [
+          [100, 200, 400],
+          [200, 300, 100],
+          [200, 100, 500]
+        ]
+      };
+      var send_referdata = {
+        "place": "production",
+        "data_type": "day",
+        "time": "2018-04-22"
+      };
+      var send_referdata_ontime = {
+        "place": "production",
+        "data_type": "ontime"
+      };
+      // 基于准备好的dom，初始化echarts图表
+      var myChart = echarts.init(document.getElementById('main'), 'macarons');
+      var myChart1 = echarts.init(document.getElementById('chart1'), 'macarons');
+      var myChart2 = echarts.init(document.getElementById('chart2'), 'macarons');
+      var option1 = {
+        title: {
+          text: "各时间段碳排",
+          subtext: "",
+          x: 'center',
+        },
+        tooltip: {
+          trigger: 'axis',
+          enterable: true,
+          formatter: function(params) {
+            var all_show=0;
+            var res = '<strong>' + titletime + '各部分碳排量</strong>'
+            for(var i = 0, l = params.length; i < l; i++) {
+              res += '<br/>' + params[i].seriesName + ' : ' + params[i].value
+              all_show+=Number(params[i].value);
+            }
+            res += '<br/>总碳排：'+all_show;
+            res += '<br/><a style="color:red" href="PieChart.html?time=' + titletime +
+              '&data1='+params[0].value+'&data2='+params[1].value+
+              '&data3='+params[2].value+'&data4='+params[3].value+
+              '&data5='+params[4].value+'&data6='+params[5].value+'&data7='+params[6].value+
+              '&data_nh='+params[7].value+'&data_yz=20">饼状图</a>'
+            return res;
+          },
+        },
+        grid:{
+          x:'20px',
+          y:'25%',
+          x2:'5%',
+          y2:'15%'
+        },
+        legend: {
+          data: ['模具清扫机', '脱模剂喷涂机','铺料机','振捣台','堆垛机','养护窑','磨光机','内含碳排'],
+          x: "left",
+          y:65
+        },
+        toolbox: {
+          y:45,
+          show: true,
+          feature: {
+            mark: {
+              show: false
+            },
+            dataView: {
+              show: true,
+              readOnly: false
+            },
+            magicType: {
+              show: true,
+              type: ['line', 'bar', 'stack', 'tiled']
+            },
+            restore: {
+              show: true
+            },
+            saveAsImage: {
+              show: true
+            }
+          }
+        },
+        calculable: true,
+        dataZoom: {
+          show: true,
+          realtime: true,
+          start: 0,
+          end: 100,
+          height:20
+        },
+        xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          data: time
+        }],
+        yAxis: [{
+          type: 'value'
+        }],
+        series: [{
+          name: '模具清扫机',
+          type: 'line',
+          stack: '总量',
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
+              }
+            }
+          },
+          markLine:{
+            tooltip:{
+              show:false
+            },
+            itemStyle: {
+              normal: {
+                lineStyle:{color:'red'},
+                label:
+                  {
+                    formatter:''+data_mark,
+                    textStyle:{color:'red'}
+                  }
+              }
+            },
+            data:[
+              [
+                { xAxis: -1, yAxis: data_mark},  // 当xAxis为类目轴时，数值1会被理解为类目轴的index，通过xAxis:-1|MAXNUMBER可以让线到达grid边缘
+                { xAxis: 100, yAxis: data_mark}
+              ]
+            ]
+          },
+          /*markPoint : {
+                    symbol:'rectangle',
+                    symbolSize:20,
+                data : [
+                    {name: '当前碳排量', value:0, xAxis:0, yAxis:0},
+                ]
+            },*/
+          data: data1
+        },
+          {
+            name: '脱模剂喷涂机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data2
+          },
+          {
+            name: '铺料机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data3,
+
+          },
+          {
+            name: '振捣台',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data4,
+
+          },
+          {
+            name: '堆垛机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data5,
+
+          },
+          {
+            name: '养护窑',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data6,
+
+          },
+          {
+            name: '磨光机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data7,
+
+          },
+          {
+            name: '内含碳排',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data8
+          },
+          /*					{
+                                  name: '总碳排',
+                                  type: 'line',
+                                  stack: '总量',
+                                  itemStyle: {
+                                      normal: {
+                                          areaStyle: {
+                                              type: 'default'
+                                          }
+                                      }
+                                  },
+                                  data: data_all
+                              },	*/
+        ]
+      };
+
+      var option2 = {
+        title: {
+          text: "碳排总量",
+          subtext: "",
+          x: 'center',
+        },
+        tooltip: {
+          trigger: 'axis',
+          enterable: true,
+          formatter: function(params) {
+            var all_show=0
+            var res = '<strong>' + titletime + '碳排总量</strong>'
+            for(var i = 0, l = params.length; i < l; i++) {
+              res += '<br/>' + params[i].seriesName + ' : ' + params[i].value
+              all_show+=Number(params[i].value);
+            }
+            res += '<br/>总碳排：'+all_show;
+            res += '<br/><a style="color:red" href="PieChart.html?time='+titletime+
+              '&data1='+params[0].value+'&data2='+params[1].value+
+              '&data3='+params[2].value+'&data4='+params[3].value+
+              '&data5='+params[4].value+'&data6='+params[5].value+'&data7='+params[6].value+
+              '&data_nh='+params[7].value+'&data_yz=0">饼状图</a>'
+            return res;
+          },
+        },
+        grid:{
+          x:'20px',
+          y:'30%',
+          x2:'5%',
+          y2:'13%',
+        },
+        legend: {
+          data: ['模具清扫机', '脱模剂喷涂机','铺料机','振捣台','堆垛机','养护窑','磨光机','内含碳排'],
+          x: "right",
+          y:75,
+        },
+        toolbox: {
+          y:45,
+          x: "right",
+          show: true,
+          feature: {
+            mark: {
+              show: false
+            },
+            dataView: {
+              show: true,
+              readOnly: false
+            },
+            magicType: {
+              show: true,
+              type: ['line', 'bar', 'stack', 'tiled']
+            },
+            restore: {
+              show: true
+            },
+            saveAsImage: {
+              show: true
+            }
+          }
+        },
+        calculable: true,
+        dataZoom: {
+          show: true,
+          realtime: true,
+          start: 0,
+          end: 100,
+          height:20
+        },
+        xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          data: time
+        }],
+        yAxis: [{
+          type: 'value'
+        }],
+        series: [{
+          name: '模具清扫机',
+          type: 'line',
+          stack: '总量',
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
+              }
+            }
+          },
+          data: data1_all
+        },
+          {
+            name: '脱模剂喷涂机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data2_all
+          },
+          {
+            name:  '铺料机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data3_all
+          },
+          {
+            name: '振捣台',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data4_all
+          },
+          {
+            name: '堆垛机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data5_all
+          },
+          {
+            name: '养护窑',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data6_all
+          },
+          {
+            name: '磨光机',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data7_all
+          },
+          {
+            name: '内含碳排',
+            type: 'line',
+            stack: '总量',
+            itemStyle: {
+              normal: {
+                areaStyle: {
+                  type: 'default'
+                }
+              }
+            },
+            data: data8_all
+          },
+        ]
+      };
+
+      var option3 = {
+        title : {
+          text: '各时间段内含碳排',
+          subtext: "",
+          x: 'center',
+        },
+        tooltip : {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          },
+          formatter: function (params){
+            return titletime + '内含碳排<br/>'
+              + params[0].seriesName + ' : ' + params[0].value + '<br/>'
+              + params[1].seriesName + ' : ' + (params[1].value + params[0].value);
+          }
+        },
+        grid:{
+          x:'50px',
+          y:'25%',
+          x2:'5%',
+          y2:'13%',
+        },
+        calculable: true,
+        dataZoom: {
+          show: true,
+          realtime: true,
+          start: 0,
+          end: 100,
+          height:20
+        },
+        toolbox: {
+          y:45,
+          x: "right",
+          show: true,
+          feature: {
+            mark: {
+              show: false
+            },
+            dataView: {
+              show: true,
+              readOnly: false
+            },
+            magicType: {
+              show: true,
+              type: ['line', 'bar', 'stack', 'tiled']
+            },
+            restore: {
+              show: true
+            },
+            saveAsImage: {
+              show: true
+            }
+          }
+        },
+        legend: {
+          data:['内含碳排总量', '各时间段内含碳排量'],
+          x: "right",
+          y:75,
+        },
+        calculable : true,
+        xAxis : [
+          {
+            type: 'category',
+            boundaryGap: false,
+            data: time
+          }
+        ],
+        yAxis : [
+          {
+            type : 'value',
+//          boundaryGap: [0, 0.1]
+          }
+        ],
+        series : [
+          {
+            name:'各时间段内含碳排量',
+            type:'bar',
+            stack: 'sum',
+            barCategoryGap: '10%',
+            itemStyle: {
+              normal: {
+                color: '#FFCC66',
+                barBorderColor: '#FFCC66',
+                barBorderWidth: 1,
+                barBorderRadius:0,
+//                  label : {
+//                      show: true, position: 'insideTop',
+//                      textStyle: {
+//                          color: 'blue'
+//                      }
+//                  }
+              }
+            },
+            data:data8
+          },
+          {
+            name:'内含碳排总量',
+            type:'bar',
+            stack: 'sum',
+            itemStyle: {
+              normal: {
+                color: 'lightblue',
+                barBorderColor: 'lightblue',
+                barBorderWidth: 1,
+                barBorderRadius:0,
+//                  label : {
+//                      show: true,
+//                      position: 'top',
+//                      formatter: function (params) {
+//                          for (var i = 0, l = option3.xAxis[0].data.length; i < l; i++) {
+//                              if (option3.xAxis[0].data[i] == params.name) {
+//                                  return option3.series[0].data[i] + params.value;
+//                              }
+//                          }
+//                      },
+//                      textStyle: {
+//                          color: 'tomato'
+//                      }
+//                  }
+              }
+            },
+            data:data8_all
+          }
+        ]
+      };
+
+
+      // 为echarts对象加载数据
+
+      if("WebSocket" in window)
+      {
+        console.log("您的浏览器支持 WebSocket!");
+        // 打开一个 web socket
+        var ws = new ReconnectingWebSocket("ws://www.mcrcit.com:7777");
+        ws.onopen = function()
+        {
+          send_referdata.time = getNowFormatDate();
+          ws.send(JSON.stringify(send_referdata));
+          // Web Socket 已连接上，使用 send() 方法发送数据
+        };
+        ws.onmessage = function(evt)
+        {
+          var received_msg = evt.data;
+//					console.log(received_msg);
+
+          if(received_msg=="NO Data"||received_msg=="")
+            alert("暂无数据,请选择有效的查询时间");
+          else
+          {
+            show_flag=1;
+            var obj = JSON.parse(received_msg);
+            index = obj.time.length;
+            time.splice(0, time.length);
+            data1.splice(0, data1.length);
+            data2.splice(0, data2.length);
+            data3.splice(0, data3.length);
+            data4.splice(0, data4.length);
+            data5.splice(0, data5.length);
+            data6.splice(0, data6.length);
+            data7.splice(0, data7.length);
+            data8.splice(0, data8.length);
+            data1_all.splice(0, data1.length);
+            data2_all.splice(0, data2.length);
+            data3_all.splice(0, data3.length);
+            data4_all.splice(0, data4.length);
+            data5_all.splice(0, data5.length);
+            data6_all.splice(0, data6.length);
+            data7_all.splice(0, data7.length);
+            data8_all.splice(0, data8.length);
+            for(var i = 0; i < index; i++)
+            {
+              time[i] = obj.time[i];
+              data1[i] = Number(obj.data.mjqsj[i].toFixed(2));
+              data2[i] = Number(obj.data.tmjptj[i].toFixed(2));
+              data3[i] = Number(obj.data.plj[i].toFixed(2));
+              data4[i] = Number(obj.data.zdt[i].toFixed(2));
+              data5[i] = Number(obj.data.ddj[i].toFixed(2));
+              data6[i] = Number(obj.data.yhy[i].toFixed(2));
+              data7[i] = Number(obj.data.mgj[i].toFixed(2));
+              data8[i] = Number(obj.data.nh[i].toFixed(2));
+              data_all[i]=data1[i]+data2[i]+data3[i]+data4[i]+data5[i]+data6[i]+data7[i]+data8[i];
+              if(i>0)
+              {
+                data1_all[i] = data1_all[i-1]+Number(obj.data.mjqsj[i].toFixed(2));
+                data2_all[i] = data2_all[i-1]+Number(obj.data.tmjptj[i].toFixed(2));
+                data3_all[i] = data3_all[i-1]+Number(obj.data.plj[i].toFixed(2));
+                data4_all[i] = data4_all[i-1]+Number(obj.data.zdt[i-1].toFixed(2));
+                data5_all[i] = data5_all[i-1]+Number(obj.data.ddj[i].toFixed(2));
+                data6_all[i] = data6_all[i-1]+Number(obj.data.yhy[i].toFixed(2));
+                data7_all[i] = data7_all[i-1]+Number(obj.data.mgj[i].toFixed(2));
+                data8_all[i] = data8_all[i-1]+Number(obj.data.nh[i-1].toFixed(2));
+              }
+              else
+              {
+                data1_all[0] = Number(obj.data.mjqsj[0].toFixed(2));
+                data2_all[0] = Number(obj.data.tmjptj[0].toFixed(2));
+                data3_all[0] = Number(obj.data.plj[0].toFixed(2));
+                data4_all[0] = Number(obj.data.zdt[0].toFixed(2));;
+                data5_all[0] = Number(obj.data.ddj[0].toFixed(2));
+                data6_all[0] = Number(obj.data.yhy[0].toFixed(2));
+                data7_all[0] = Number(obj.data.mgj[0].toFixed(2));
+                data8_all[0] = Number(obj.data.nh[0].toFixed(2));;
+              }
+              data_all_all=data1_all[0]+data2_all[0]+data3_all[0]+data4_all[0]+data5_all[0]+data6_all[0]+data7_all[0]+data8_all[0];
+              //                		first_flag=0;
+            }
+//						var iindex=data1.length-1;
+            /*if(ontimes_flag == 1)
+                          option1.series[0].markPoint.data[0]={name: '当前碳排量', value:data_all[iindex], xAxis:time[iindex], yAxis:data_all[iindex]};
+                  */	option1.title.subtext = "时间：" + titletime;
+            option2.title.subtext = "时间：" + titletime;
+            option3.title.subtext = "时间：" + titletime;
+            myChart.setOption(option1, true);
+            myChart1.setOption(option2, true);
+            myChart2.setOption(option3, true);
+          }
+        };
+        ws.onclose = function()
+        { // 关闭 websocket
+          console.log("连接已关闭...");
+        };
+      }
+      else
+      {
+        // 浏览器不支持 WebSocket
+        console.log("您的浏览器不支持 WebSocket!");
+      }
+      //数据查询相关函数
+      function ontimeshow()
+      {
+        send_referdata.time = getNowFormatDate();
+        send_referdata.place = "production";
+        send_referdata.data_type = "day";
+        ontimes_flag = 1;
+        titletime = send_referdata.time;
+        time_day.style.display = 'none';
+        time_week.style.display = 'none';
+        time_month.style.display = 'none';
+        refer_flag = 4;
+        ws.send(JSON.stringify(send_referdata));
+      }
+      function refer_day()
+      {
+        time_day.style.display = 'block';
+        time_week.style.display = 'none';
+        time_month.style.display = 'none';
+        refer_flag = 1;
+      }
+      function refer_week()
+      {
+        time_day.style.display = 'none';
+        time_week.style.display = 'block';
+        time_month.style.display = 'none';
+        refer_flag = 2;
+      }
+      function refer_month()
+      {
+        time_day.style.display = 'none';
+        time_week.style.display = 'none';
+        time_month.style.display = 'block';
+        refer_flag = 3;
+      }
+      function refer_year()
+      {
+        time_day.style.display = 'none';
+        time_week.style.display = 'none';
+        time_month.style.display = 'none';
+        refer_flag = 4;
+        ontimes_flag = 0;
+        ws.send(JSON.stringify(send_referdata));
+      }
+      function refer_data()
+      {
+        if(refer_flag == 1)
+        {
+          send_referdata.data_type = "day";
+          send_referdata.time = document.getElementById("time_day").value;
+          ontimes_flag = 0;
+          titletime = send_referdata.time;
+          ws.send(JSON.stringify(send_referdata));
+        }
+        if(refer_flag == 2)
+        {
+          send_referdata.data_type = "week";
+          send_referdata.time = document.getElementById("time_week").value;
+          ontimes_flag = 0;
+          titletime = send_referdata.time;
+          ws.send(JSON.stringify(send_referdata));
+        }
+        if(refer_flag == 3)
+        {
+          send_referdata.data_type = "month";
+          send_referdata.time = document.getElementById("time_month").value;
+          ontimes_flag = 0;
+          titletime = send_referdata.time;
+          ws.send(JSON.stringify(send_referdata));
+        }
+
+      }
+
+      window.onresize = function () {
+        myChart.resize();
+        myChart1.resize();
+        myChart2.resize();
+      }
+
+      /*                    console.log(option1.series[0].markPoint.data);
+                   option1.series[0].markPoint.data={name: '当前碳排量', value:data_all[iindex], xAxis:'24:00', yAxis:data_all[iindex]};
+                    console.log(option1.series[0].markPoint.data);*/
+      window.setInterval(function () {
+        if(show_flag&&ontimes_flag == 1)
+        {
+          ws.send(JSON.stringify(send_referdata));
+//        	ws.send(JSON.stringify(send_referdata_ontime));
+
+        }
+      }, 1000);
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--// layui-body 结束-->
+  </div>
+
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    © 重庆大学
+  </div>
+</div>
+
+<script>
+  //JavaScript代码区域
+  layui.use('element', function(){
+    var element = layui.element;
+
+  });
+</script>
+
+</body>
+</html>
+
+

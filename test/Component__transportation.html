@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>构件运输</title>
+  <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+  <script src="../layui/layui.js" charset="utf-8"></script>
+  <script src="../jquery-3.4.1.min.js"></script>
+  <script src="http://mockjs.com/dist/mock.js"></script>;
+
+
+  <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+  <script src="https://webapi.amap.com/maps?v=1.4.10&key=f11e247be27c4e49ba485eacb8badf42&plugin=AMap.PolyEditor"></script>
+  <style>
+
+    #container{
+      width:100%;
+      height: 96%;
+    }
+
+
+  </style>
+  <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+  <style type="text/css">
+    #container,html,body{
+      height: 100%;
+    }
+    .color{
+      width:5rem;
+      height:0.6rem;
+      display:inline-block;
+      margin:0 1rem;
+    }
+    .info{
+      min-width:10rem;
+    }
+  </style>
+</head>
+
+
+<body class="layui-layout-body">
+
+<!--弹出的表单-->
+<!--机械信息界面-->
+
+<form class="layui-form" id="Mechanical_form" style="display:none">
+
+  <table class="layui-table"   lay-size="sm" lay-skin="nob " style="width: 100%">
+    <colgroup>
+      <col>
+      <col >
+      <col>
+      <col >
+      <col>
+      <col >
+      <col>
+      <col >
+      <col>
+      <col >
+    </colgroup>
+    <thead>
+    <tr>
+      <th>机械名称</th>
+      <th>机械型号</th>
+      <th>设备编号</th>
+      <th>额定载重量</th>
+      <th>实际载重量</th>
+      <th>司机数量</th>
+      <th>传感器编号</th>
+      <th>司机碳排放量</th>
+      <th>车碳排放量</th>
+      <th>总碳排放量</th>
+      <th> <button id="Mechanical-add-btn" type="button"  class="layui-btn layui-btn-sm layui-btn-normal"><i class="layui-icon  layui-icon-add-1"></i> </button>
+      </th>
+    </tr>
+    </thead>
+    <tbody id="MechanicalInsert">
+
+    </tbody>
+  </table>
+
+
+
+  <script>
+    //响应按钮
+    let i=0;
+    //响应添加按钮：
+    addstrs_Mechanical(i);
+    $('#Mechanical-add-btn').click(function(){
+
+      addstrs_Mechanical(i);
+    });
+
+    function addstrs_Mechanical(i){
+      var insert;
+      insert='<tr id="InputsWrapper'+i+'">\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入机械名称" autocomplete="on" class="layui-input" id="inputMechanicalName'+i+'" style="width:103px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入机械型号" autocomplete="on" class="layui-input" id="inputMechanicalSize'+i+'" style="width:103px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入设备编号" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:103px" >\n' +
+        '  </td>\n' +
+
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入额定载重量" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:116px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入实际载重量" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:116px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入司机数量" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:103px" >\n' +
+        '  </td>\n' +
+
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="请输入传感器编号" autocomplete="on" class="layui-input" id="inputCensorID'+i+'" style="width:116px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:70px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:70px" >\n' +
+        '  </td>\n' +
+        '  <td>\n' +
+        '    <input type="text" name="title" required  lay-verify="required" placeholder="" autocomplete="on" class="layui-input" id="inputDeviceID'+i+'" style="width:70px" >\n' +
+        '  </td>\n' +
+        '  <td> <button id="delet-btn'+i+'" type="button" class="layui-btn layui-btn-sm  layui-btn-danger btn-del" class="layui-icon "><i class="layui-icon  layui-icon-delete"></i></button></td>\n' +
+        '</tr>';
+      $('#MechanicalInsert').append(insert);
+      i++;}
+
+
+    // //响应删除按钮
+    $('body').on("click",".btn-del",function () {
+      var pre = $(this);//这里获取点击当前行，就是要删除此行把此行的属性交给变量pre
+      layui.use('layer', function(){
+        layer.msg('确定要删除么？',{
+          btn:['确定','取消']
+        },function () {
+          //为什么这个里不能直接用this表示当前行，因为作用域不一样，通过变量传递的方式获取当前行
+          $(pre).parent().parent().remove();//这里是移除当前删除行的内容
+          layer.closeAll('dialog');//这里是点击确定删除后关闭整个弹出层
+        })
+      })
+    });
+  </script>
+
+
+
+
+  <table class="layui-table"   lay-size="sm" lay-skin="nob " style="text-align: center; width: 100%">
+    <colgroup >
+      <col width="150">
+      <col width="150">
+      <col width="150">
+    </colgroup>
+    <thead>
+    <tr >
+      <th style="text-align: center;">能耗名称</th>
+      <th style="text-align: center;">材料数量</th>
+      <th style="text-align: center;">碳排放量</th>
+    </tr>
+    </thead>
+    <tbody >
+    <tr>
+      <td>电能</td>
+      <td>2742</td>
+      <td>12T</td>
+    </tr>
+    <tr>
+      <td>化石能</td>
+      <td>1344</td>
+      <td>32T</td>
+    </tr>
+    <tr>
+      <td>电能</td>
+      <td>5732</td>
+      <td>12T</td>
+    </tr>
+    <tr>
+      <td>化石能</td>
+      <td>1344</td>
+      <td>32T</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="layui-form-item"  style="margin-left: 50%">
+
+    <label class="layui-form-label" >碳排总量</label>
+    <div class="layui-input-inline" style="width: 100px;">
+      <input type="text"  lay-verify="pass"  autocomplete="off" class="layui-input">
+    </div>
+    <div class="layui-form-mid layui-word-aux">kgCO2</div>
+  </div>
+</form>
+
+
+
+
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">CPS系统 > 系统管理 > 构件运输</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+  </div>
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  layui-nav-side lay-filter="test">
+        <li class="layui-nav-item ">
+          <a class="" href="javascript:;">系统管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="Component_management.html">构件管理</a></dd>
+            <dd><a href="Equipment_ management.html">设备管理</a></dd>
+            <dd><a href="Carbonemissionfactor_management.html">碳排因子管理</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+          <a href="javascript:;">实时监控</a>
+          <dl class="layui-nav-child">
+            <dd><a href="Component_production.html">构件生产</a></dd>
+            <dd><a href="Component__transportation.html">构件运输</a></dd>
+            <dd><a href="Component_assembly.html">现场装配</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">数据分析</a>
+          <dl class="layui-nav-child">
+            <dd><a href="DataAnalysis_source.html">按碳源类型分</a></dd>
+            <dd><a href="DataAnalysis_stage.html">按建造阶段分</a></dd>
+            <dd><a href="DataAnalysis_summary.html">碳排汇总信息</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">退出</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="layui-body">
+
+
+<div >
+  <div class="layui-inline">
+    <label class="layui-form-label" style="margin-top: 4px">车辆编号</label>
+    <div class="layui-input-inline">
+      <select name="modules" lay-verify="required" lay-search="" style="margin-top: 7px">
+        <option value="">请输入车辆编号</option>
+        <option value="1">C04</option>
+        <option value="2">C05</option>
+        <option value="3">C06</option>
+        <option value="4">C07</option>
+        <option value="5">C08</option>
+      </select>
+    </div>
+  </div>  <button id="MechanicalInfo"  type="button" class="layui-btn layui-btn-sm layui-btn-normal">机械信息 </button>
+  <script>
+    $('#MechanicalInfo').click(function () {
+      layui.use('table', function() {
+        layer.open({
+          type: 1,
+          area: ['1300px', '600px'],
+          title: '机械信息'
+          , content: $('#Mechanical_form'),
+          shade: 0,
+          btn: ['修改','确定','退出']
+          , btn1: function (index, layero) {
+            // var kk=$("#username").val();
+            alert("修改按钮点击");
+          },
+          btn2: function (index, layero) {
+            // var kk=$("#username").val();
+            alert("确定按钮点击");
+            return false;//这一行会防止按完按钮之后自动关闭layer！
+          },
+          btn3: function (index, layero) {
+            // var kk=$("#username").val();
+            alert("退出按钮点击");
+          },
+          cancel: function (layero, index) {
+            layer.closeAll();
+          }
+
+        });
+      })
+    });
+
+  </script>
+</div>
+    <div id="container" ></div>
+    <!-- 加载地图JSAPI脚本 -->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=8b70cda797f90b3799b50da61edbe2c2"></script>
+    <script>
+      var path=new Array();
+      //插入地图
+      var map = new AMap.Map('container', {
+        resizeEnable: true, //是否监控地图容器尺寸变化
+        zoom:14, //初始化地图层级
+        center: [106.468812,29.564912] //初始化地图中心点
+      });
+      //插入插件
+      AMap.plugin('AMap.ToolBar',function(){//异步加载插件
+        var toolbar = new AMap.ToolBar();
+        map.addControl(toolbar);
+      });
+
+      // 创建折线实例
+      // var polyline = new AMap.Polyline({
+      //   path: path,
+      //   borderWeight: 2, // 线条宽度，默认为 1
+      //   strokeColor: 'red', // 线条颜色
+      //   lineJoin: 'round' // 折线拐点连接处样式
+      // });
+      function pathLength(){
+        var arr=new Array();//经纬度坐标数组
+        arr.push(new AMap.LngLat("106.454456","29.56228"));
+        arr.push(new AMap.LngLat("106.455701","29.560675"));
+        arr.push(new AMap.LngLat("106.457932","29.558286"));
+        arr.push(new AMap.LngLat("106.459563","29.557689"));
+        arr.push(new AMap.LngLat("106.460378","29.558883"));
+        arr.push(new AMap.LngLat("106.46231","29.559742"));
+
+        arr.push(new AMap.LngLat("106.464455","29.557801"));
+        arr.push(new AMap.LngLat("106.472995","29.560264"));
+        arr.push(new AMap.LngLat("106.477416","29.559294"));
+        arr.push(new AMap.LngLat("106.482093","29.563661"));
+
+
+        //定义折线对象
+        polyline=new AMap.Polyline({
+          path:arr,     //设置折线的节点数组
+          // strokeColor:"red",
+          // strokeOpacity:1,
+          // strokeWeight:3,
+          // strokeDasharray:[10,5],
+          lineJoin: 'round', // 折线拐点连接处样式
+          strokeWeight:8,
+          strokeOpacity:0.8,
+          strokeColor:'#0091ea',
+          showDir:true
+        });
+
+
+        polyline.setMap(map);//地图上添加折线
+
+        var distance = Math.round(AMap.GeometryUtil.distanceOfLine(arr));
+        var text = new AMap.Text({
+          position: new AMap.LngLat(106.468812,29.564912),
+          text: '车辆行驶路径长度：' + distance + '米',
+          offset: new AMap.Pixel(-20, -20)
+        })
+        map.add(text);
+        map.setFitView();
+      }
+
+      pathLength();
+      // 将折线添加至地图实例
+      <!-- map.add(polyline); -->
+      //polyline.setMap(map);
+      //map.setFitView([ polyline ])
+     // setTimeout("updateData()",5000);
+    </script>
+
+    <!-- 加载高德地图api -->
+
+<!--    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=8b70cda797f90b3799b50da61edbe2c2" >-->
+
+<!--      setTimeout("updateData()",5000);-->
+<!--      function updateData(){-->
+
+<!--        var path=new Array();-->
+
+
+
+
+
+<!--        document.write(path + '<br>');-->
+
+<!--        //插入地图-->
+<!--        var map = new AMap.Map('container',{-->
+<!--          zoom:14,-->
+<!--          center:[106.5,29.5]-->
+<!--        });-->
+<!--        //插入插件-->
+
+
+<!--        // 创建折线实例-->
+<!--        var polyline = new AMap.Polyline({-->
+<!--          path: path,-->
+<!--          borderWeight: 2, // 线条宽度，默认为 1-->
+<!--          strokeColor: 'red', // 线条颜色-->
+<!--          lineJoin: 'round' // 折线拐点连接处样式-->
+<!--        });-->
+
+
+<!--        // 将折线添加至地图实例-->
+<!--        &lt;!&ndash; map.add(polyline); &ndash;&gt;-->
+<!--        //polyline.setMap(map);-->
+<!--        //map.setFitView([ polyline ])-->
+<!--        setTimeout("updateData()",5000);-->
+<!--      }-->
+
+<!--    </script>-->
+
+
+
+
+
+    </div>
+  </div>
+
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    © 重庆大学
+  </div>
+</div>
+
+<script>
+  //JavaScript代码区域
+  layui.use('element', function(){
+    var element = layui.element;
+
+  });
+</script>
+</body>
+</html>
+
+

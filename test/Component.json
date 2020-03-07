@@ -1,0 +1,53 @@
+{
+  "code":0,
+  "msg":"",
+  "count":101,
+  "data":[
+    {
+      "ComponentID":"10001",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    },
+    {
+      "ComponentID":"10002",
+      "ComponentName":"混凝土",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10003",
+      "ComponentName":"梁",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10004",
+      "ComponentName":"挖掘机",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10005",
+      "ComponentName":"起重机",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10006",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10007",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10001",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10001",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10001",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }, {
+      "ComponentID":"10001",
+      "ComponentName":"钢筋",
+      "ComponentSize":"10 X 20 X 30"
+    }
+  ]
+}
